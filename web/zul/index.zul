@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" arg0="winUtama" ?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+    <style>
+        .form-label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+            text-align: right;
+            padding-right: 10px;s
+        }
+    </style>
+
+    <div id="header" style="background-color:#3498db; padding: 15px; text-align:center; margin-bottom:20px;">
+        <image src="/img/logo-pku.png" style="height: 80px; margin-right: 20px;" />
+        <label value="DAFTAR KARYAWAN RSU PKU MUHAMMADIYAH BANTUL" 
+               style="font-weight: bold; font-size: 22px; color: #fff;" />
+    </div>
+
+    <window id="winUtama" title="Form Karyawan" border="normal" width="90%" 
+            apply="ctrl.index" style="margin:0 auto;" closable="false">
+
+        <!-- FORM INPUT -->
+        <grid width="100%">
+            <columns>
+                <column width="30%"/>
+                <column width="70%"/>
+            </columns>
+            <rows>
+                <row><label value="Nama" sclass="form-label" />
+                    <textbox id="txtNama" value="@{composer.karyawan.nama}" width="95%" height="30px" /></row>
+                <row><label value="NBM" sclass="form-label" />
+                    <textbox id="txtNBM" value="@{composer.karyawan.nbm}" width="95%" height="30px" /></row>
+                <row><label value="Alamat" sclass="form-label" />
+                    <textbox id="txtAlamat" value="@{composer.karyawan.alamat}" width="95%" rows="3" /></row>
+                <row><label value="Jenis Kelamin" sclass="form-label" />
+                    <radiogroup id="rgJK" selectedItem="@{composer.karyawan.jk}">
+                        <radio label="Laki-laki" value="L" />
+                        <radio label="Perempuan" value="P" />
+                    </radiogroup></row>
+                <row><label value="Tanggal Lahir" sclass="form-label" />
+                    <datebox id="tglLahir" value="@{composer.karyawan.tglLahir}" format="dd-MM-yyyy" width="150px" /></row>
+                <row><label value="Pendidikan" sclass="form-label" />
+                    <combobox id="cbPendidikan">
+                        <comboitem label="Pilih Pendidikan" value="${null}"/>
+                        <comboitem forEach="${composer.listPendidikan}" label="${each.namaPendidikan}" value="${each}"/>
+                    </combobox></row>
+                <row><label value="Jabatan" sclass="form-label" />
+                    <combobox id="cbJabatan">
+                        <comboitem label="Pilih Jabatan" value="${null}"/>
+                        <comboitem forEach="${composer.listJabatan}" label="${each.namaJabatan}" value="${each}"/>
+                    </combobox></row>
+                <row><label value="Agama" sclass="form-label" />
+                    <combobox id="cbAgama">
+                        <comboitem label="Pilih Agama" value="${null}"/>
+                        <comboitem forEach="${composer.listAgama}" label="${each.namaAgama}" value="${each}"/>
+                    </combobox></row>
+            </rows>
+        </grid>
+
+        <separator width="100%" bar="true" />
+
+        <!-- TOMBOL AKSI -->
+        <div style="text-align:center; margin-top:20px">
+            <button id="btnSimpan" label="SIMPAN" iconSclass="z-icon-plus"  style="margin-right:10px; background-color: blue; color: white;" />
+            <button id="btnRefresh" label="REFRESH" iconSclass="z-icon-refresh"  style="margin-right:10px; background-color: green; color: white;" />
+            <button id="btnClear" label="CLEAR FROM" iconSclass="z-icon-remove"  style="margin-right:10px; background-color: red; color: white;"/>
+            <button id="btnEdit" label="EDIT" iconSclass="z-icon-edit" style="margin-right:10px; color: white;"/>
+            <button id="btnDelete" onClick="btnDelete" label="DELETE" iconSclass="z-icon-trash" style="margin-right:10px; background-color: crimson; color: white;"/>
+        </div>
+        <separator height="20px"/>
+
+        <separator width="100%" bar="true" />
+
+        <!-- LIST DATA KARYAWAN -->
+        <separator height="20px"/>
+        <listbox id="listboxKaryawan" model="@{winUtama$composer.listKaryawan,load-after='winUtama.onCreate, btnRefresh.onClick'}" width="100%" mold="paging" onSelect="@command('selectKaryawan')" pageSize="10">
+        <listhead>
+                <listheader label="No" width="50px" />
+                <listheader label="Nama" />
+                <listheader label="NBM" />
+                <listheader label="Alamat" />
+                <listheader label="JK" />
+                <listheader label="Tgl Lahir" />
+                <listheader label="Pendidikan" />
+                <listheader label="Jabatan" />
+                <listheader label="Agama" />
+            </listhead>
+            <listitem forEach="@{winUtama$composer.listKaryawan}"  self="@{each='karyawan'}" value="@{karyawan}">
+                <listcell label="@{karyawan.id}" />
+                <listcell label="@{karyawan.nama}" style="text-align: left;"/>
+                <listcell label="@{karyawan.nbm}" />
+                <listcell label="@{karyawan.alamat}" />
+                <listcell label="${karyawan.jk eq 'L' ? 'Laki-laki' : 'Perempuan'}" />
+                <listcell label="@{karyawan.tglLahir}" />
+                <listcell label="@{karyawan.idPendidikan.namaPendidikan}" />
+                <listcell label="@{karyawan.idJabatan.namaJabatan}" />
+                <listcell label="@{karyawan.idAgama.namaAgama}" />
+            </listitem>
+        </listbox>
+    </window>
+</zk>
